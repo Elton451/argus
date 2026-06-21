@@ -1,0 +1,10 @@
+services:
+  argus:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - ARGUS_DB_PATH=/app/data/argus.db
+      - ARGUS_ADDR=:8080
