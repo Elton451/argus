@@ -11,11 +11,14 @@ func main() {
 
 	fmt.Println(config);
 
-	db, err := store.Open(config.DBPath)
+	store, err := store.Open(config.DBPath)
 	if err != nil {
 		fmt.Println("Error while connecting DB", err)
 	}
 
-	fmt.Println("DB: ", db)
+	migrateErr := store.Migrate("internal/migrations")
+	if migrateErr != nil {
+		fmt.Println("Error while on migration", migrateErr)
+	}
 }
 
