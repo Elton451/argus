@@ -1,22 +1,35 @@
 package store
 
-import "os"
+import (
+	"os"
+	"log"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
-    DBPath string
-    Addr   string
+	DBPath string
+	Addr   string
 }
 
 func Load() Config {
-    return Config{
-        DBPath: getEnv("ARGUS_DB_PATH", "./argus.db"),
-        Addr:   getEnv("ARGUS_ADDR", ":8080"),
-    }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	dbPath := os.Getenv("ARGUS_DB_PATH")
+	addr := os.Getenv("ARGUS_ADDR")
+
+	return Config{
+		DBPath: getEnv(dbPath, "./argus.db"),
+		Addr:   getEnv(addr, ":8080"),
+	}
 }
 
 func getEnv(key, fallback string) string {
-    if v := os.Getenv(key); v != "" {
-        return v
-    }
-    return fallback
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }
